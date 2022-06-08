@@ -6,18 +6,22 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
+import com.tbuonomo.viewpagerdotsindicator.DotsIndicator
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var viewPager : ViewPager
+    lateinit var dotIndicator : DotsIndicator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         viewPager = findViewById(R.id.viewPager)
+        dotIndicator = findViewById(R.id.dots_indicator)
 
         viewPager.adapter = SimpleViewPagerAdapter(supportFragmentManager)
+        dotIndicator.setViewPager(viewPager)
     }
 
 
