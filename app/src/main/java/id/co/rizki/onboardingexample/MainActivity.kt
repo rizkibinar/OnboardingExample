@@ -2,6 +2,8 @@ package id.co.rizki.onboardingexample
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
@@ -12,6 +14,7 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var viewPager : ViewPager
     lateinit var dotIndicator : DotsIndicator
+    lateinit var imgNext : ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,9 +22,36 @@ class MainActivity : AppCompatActivity() {
 
         viewPager = findViewById(R.id.viewPager)
         dotIndicator = findViewById(R.id.dots_indicator)
+        imgNext = findViewById(R.id.img_next)
 
         viewPager.adapter = SimpleViewPagerAdapter(supportFragmentManager)
         dotIndicator.setViewPager(viewPager)
+
+        imgNext.setOnClickListener {
+            val currentIndex = viewPager.currentItem
+            viewPager.currentItem = currentIndex+1
+        }
+
+        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+
+            }
+
+            override fun onPageSelected(position: Int) {
+                if(position == 1 || position == 0) imgNext.visibility = View.VISIBLE
+                else imgNext.visibility = View.GONE
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {
+
+            }
+
+        })
+
     }
 
 
