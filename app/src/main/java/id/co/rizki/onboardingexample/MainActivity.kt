@@ -1,5 +1,6 @@
 package id.co.rizki.onboardingexample
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -10,11 +11,13 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnBoardLoginFragment.UserNameInputListener {
 
     lateinit var viewPager : ViewPager
     lateinit var dotIndicator : DotsIndicator
     lateinit var imgNext : ImageView
+
+    var namaUser = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,11 +28,17 @@ class MainActivity : AppCompatActivity() {
         imgNext = findViewById(R.id.img_next)
 
         viewPager.adapter = SimpleViewPagerAdapter(supportFragmentManager)
-        dotIndicator.setViewPager(viewPager)
+        dotIndicator.attachTo(viewPager)
 
         imgNext.setOnClickListener {
             val currentIndex = viewPager.currentItem
             viewPager.currentItem = currentIndex+1
+
+            if(currentIndex == 2) {
+                val intentToHome = Intent(this, HomeActivity::class.java)
+                intentToHome.putExtra("DATA_USER_NAME", namaUser)
+                startActivity(intentToHome)
+            }
         }
 
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -42,7 +51,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onPageSelected(position: Int) {
-                if(position == 1 || position == 0) imgNext.visibility = View.VISIBLE
+                if(position == 1 || namaUser.isNotEmpty()) imgNext.visibility = View.VISIBLE
                 else imgNext.visibility = View.GONE
             }
 
@@ -65,5 +74,10 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    override fun afterUserInputName(input: String) {
+        if(input.isNotEmpty()) imgNext.visibility = View.VISIBLE else imgNext.visibility = View.GONE
+        namaUser = input
     }
 }
