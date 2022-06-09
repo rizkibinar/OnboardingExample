@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator
 
+// step 3 kirim data dari fragment ke activity, implement di activity
 class MainActivity : AppCompatActivity(), OnBoardLoginFragment.UserNameInputListener {
 
     lateinit var viewPager : ViewPager
@@ -39,6 +40,11 @@ class MainActivity : AppCompatActivity(), OnBoardLoginFragment.UserNameInputList
                 intentToHome.putExtra("DATA_USER_NAME", namaUser)
                 startActivity(intentToHome)
             }
+
+            if(currentIndex == 0) {
+                // step 6 kirim data dari activity ke fragment, panggil method dan kirim data sesuai yg dibutuhkan
+                listener?.onDataSend("data from activity")
+            }
         }
 
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -51,7 +57,7 @@ class MainActivity : AppCompatActivity(), OnBoardLoginFragment.UserNameInputList
             }
 
             override fun onPageSelected(position: Int) {
-                if(position == 1 || namaUser.isNotEmpty()) imgNext.visibility = View.VISIBLE
+                if(position == 1 || position == 0|| namaUser.isNotEmpty()) imgNext.visibility = View.VISIBLE
                 else imgNext.visibility = View.GONE
             }
 
@@ -76,8 +82,18 @@ class MainActivity : AppCompatActivity(), OnBoardLoginFragment.UserNameInputList
 
     }
 
+    // step 4 kirim data dari fragment ke activity, override method interfacenya
     override fun afterUserInputName(input: String) {
         if(input.isNotEmpty()) imgNext.visibility = View.VISIBLE else imgNext.visibility = View.GONE
         namaUser = input
     }
+
+    // step 2 data dari activity ke fragment. bikin variable di activity
+    var listener: OnSendDataToFragment? = null
+
+    // step 1 kirim data dari activity ke fragment, bikin interface di activity
+    interface OnSendDataToFragment {
+        fun onDataSend(input: String)
+    }
+
 }
